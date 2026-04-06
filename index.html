@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Space Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+      font-family: Arial;
+      color: white;
+    }
+
+    .space {
+      width: 2500px;
+      height: 2500px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: url('https://www.solarsystemscope.com/textures/download/2k_stars.jpg');
+    }
+
+    .sun {
+      width: 140px;
+      height: 140px;
+      background: url('https://www.solarsystemscope.com/textures/download/2k_sun.jpg');
+      background-size: cover;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 120px orange;
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .planet {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background-size: cover;
+      cursor: pointer;
+    }
+
+    .mercury { width:10px;height:10px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_mercury.jpg');}
+    .venus { width:14px;height:14px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_venus_surface.jpg');}
+    .earth { width:16px;height:16px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg');}
+    .mars { width:12px;height:12px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_mars.jpg');}
+    .jupiter { width:30px;height:30px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg');}
+    .saturn { width:26px;height:26px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_saturn.jpg');}
+    .uranus { width:18px;height:18px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_uranus.jpg');}
+    .neptune { width:18px;height:18px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_neptune.jpg');}
+
+    .ring {
+      position: absolute;
+      width: 50px;
+      height: 15px;
+      background: url('https://www.solarsystemscope.com/textures/download/2k_saturn_ring_alpha.png');
+      background-size: cover;
+      top: 5px;
+      left: -12px;
+    }
+
+    /* Info Panel */
+    .info {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      background: rgba(0,0,0,0.7);
+      padding: 15px;
+      border: 1px solid white;
+      max-width: 200px;
+      display: none;
+    }
+
+    /* Shooting star */
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 80px;
+      background: white;
+      opacity: 0.7;
+      transform: rotate(45deg);
+      animation: shoot 2s linear infinite;
+    }
+
+    @keyframes shoot {
+      0% { transform: translate(0,0) rotate(45deg); opacity:1;}
+      100% { transform: translate(600px,600px) rotate(45deg); opacity:0;}
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="space" id="space">
+
+  <div class="sun"></div>
+
+  <!-- Planets -->
+  <div class="orbit" style="width:150px;height:150px;animation-duration:5s;">
+    <div class="planet mercury" onclick="showInfo('Mercury: Closest to Sun')"></div>
+  </div>
+
+  <div class="orbit" style="width:220px;height:220px;animation-duration:7s;">
+    <div class="planet venus" onclick="showInfo('Venus: Hottest planet')"></div>
+  </div>
+
+  <div class="orbit" style="width:300px;height:300px;animation-duration:10s;">
+    <div class="planet earth" onclick="showInfo('Earth: Our home 🌍')"></div>
+  </div>
+
+  <div class="orbit" style="width:380px;height:380px;animation-duration:12s;">
+    <div class="planet mars" onclick="showInfo('Mars: Red planet')"></div>
+  </div>
+
+  <div class="orbit" style="width:500px;height:500px;animation-duration:18s;">
+    <div class="planet jupiter" onclick="showInfo('Jupiter: Biggest planet')"></div>
+  </div>
+
+  <div class="orbit" style="width:620px;height:620px;animation-duration:22s;">
+    <div class="planet saturn" onclick="showInfo('Saturn: Rings planet')">
+      <div class="ring"></div>
+    </div>
+  </div>
+
+  <div class="orbit" style="width:740px;height:740px;animation-duration:26s;">
+    <div class="planet uranus" onclick="showInfo('Uranus: Ice giant')"></div>
+  </div>
+
+  <div class="orbit" style="width:860px;height:860px;animation-duration:30s;">
+    <div class="planet neptune" onclick="showInfo('Neptune: Farthest planet')"></div>
+  </div>
+
+  <!-- Shooting stars -->
+  <div class="star" style="top:100px;left:200px;"></div>
+  <div class="star" style="top:400px;left:800px;"></div>
+
+</div>
+
+<div class="info" id="infoBox"></div>
+
+<script>
+let space = document.getElementById("space");
+let scale = 1, posX = 0, posY = 0;
+let velocityX = 0, velocityY = 0;
+let isDragging = false, startX, startY;
+
+/* Smooth movement */
+function animate() {
+  posX += velocityX;
+  posY += velocityY;
+  velocityX *= 0.95;
+  velocityY *= 0.95;
+  update();
+  requestAnimationFrame(animate);
+}
+animate();
+
+function update() {
+  space.style.transform =
+    translate(-50%, -50%) translate(${posX}px, ${posY}px) scale(${scale});
+}
+
+/* Mouse drag */
+document.addEventListener("mousedown", e => {
+  isDragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
+});
+
+document.addEventListener("mouseup", () => isDragging = false);
+
+document.addEventListener("mousemove", e => {
+  if (!isDragging) return;
+  velocityX = (e.clientX - startX) * 0.1;
+  velocityY = (e.clientY - startY) * 0.1;
+  startX = e.clientX;
+  startY = e.clientY;
+});
+
+/* Zoom */
+document.addEventListener("wheel", e => {
+  scale += e.deltaY * -0.001;
+  scale = Math.max(0.5, Math.min(3, scale));
+  update();
+});
+
+/* Touch */
+document.addEventListener("touchmove", e => {
+  velocityX = (e.touches[0].clientX - startX) * 0.1;
+  velocityY = (e.touches[0].clientY - startY) * 0.1;
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+});
+
+/* Info panel */
+function showInfo(text) {
+  let box = document.getElementById("infoBox");
+  box.innerHTML = text;
+  box.style.display = "block";
+}
+</script>
+
+</body>
+</html>
