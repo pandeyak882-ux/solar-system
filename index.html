@@ -1,195 +1,126 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ultimate 3D Solar System</title>
+  <title>Ultra Realistic Solar System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    body { margin:0; overflow:hidden; background:black; }
-    #infoBox {
-      position:absolute;
-      right:10px;
-      top:10px;
-      color:white;
-      background:rgba(0,0,0,0.7);
-      padding:10px;
-      font-family:Arial;
-      display:none;
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
     }
-    #btn {
-      position:absolute;
-      left:10px;
-      top:10px;
-      padding:8px;
-      background:black;
-      color:white;
-      border:1px solid white;
-      cursor:pointer;
+
+    .space {
+      width: 2000px;
+      height: 2000px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: url('https://www.solarsystemscope.com/textures/download/2k_stars.jpg');
     }
+
+    .sun {
+      width: 140px;
+      height: 140px;
+      background: url('https://www.solarsystemscope.com/textures/download/2k_sun.jpg');
+      background-size: cover;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 100px orange;
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .planet {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background-size: cover;
+    }
+
+    .mercury { width:10px;height:10px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_mercury.jpg');}
+    .venus { width:14px;height:14px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_venus_surface.jpg');}
+    .earth { width:16px;height:16px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg');}
+    .mars { width:12px;height:12px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_mars.jpg');}
+    .jupiter { width:30px;height:30px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg');}
+    .saturn { width:26px;height:26px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_saturn.jpg');}
+    .uranus { width:18px;height:18px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_uranus.jpg');}
+    .neptune { width:18px;height:18px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_neptune.jpg');}
+
+    .ring {
+      position: absolute;
+      width: 50px;
+      height: 15px;
+      background: url('https://www.solarsystemscope.com/textures/download/2k_saturn_ring_alpha.png');
+      background-size: cover;
+      top: 5px;
+      left: -12px;
+    }
+
   </style>
 </head>
 
 <body>
 
-<button id="btn">Play Sound 🔊</button>
-<div id="infoBox"></div>
+<div class="space">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
+  <div class="sun"></div>
 
-<script>
-const scene = new THREE.Scene();
+  <div class="orbit" style="width:150px;height:150px;animation-duration:5s;">
+    <div class="planet mercury"></div>
+  </div>
 
-/* CAMERA */
-const camera = new THREE.PerspectiveCamera(
-  75, window.innerWidth/window.innerHeight, 0.1, 3000
-);
-camera.position.set(0, 30, 80);
+  <div class="orbit" style="width:220px;height:220px;animation-duration:7s;">
+    <div class="planet venus"></div>
+  </div>
 
-/* RENDERER */
-const renderer = new THREE.WebGLRenderer({ antialias:true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+  <div class="orbit" style="width:300px;height:300px;animation-duration:10s;">
+    <div class="planet earth"></div>
+  </div>
 
-/* CONTROLS */
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  <div class="orbit" style="width:380px;height:380px;animation-duration:12s;">
+    <div class="planet mars"></div>
+  </div>
 
-/* LIGHT */
-const light = new THREE.PointLight(0xffffff, 2, 3000);
-scene.add(light);
+  <div class="orbit" style="width:500px;height:500px;animation-duration:18s;">
+    <div class="planet jupiter"></div>
+  </div>
 
-/* TEXTURE LOADER */
-const loader = new THREE.TextureLoader();
+  <div class="orbit" style="width:620px;height:620px;animation-duration:22s;">
+    <div class="planet saturn">
+      <div class="ring"></div>
+    </div>
+  </div>
 
-/* SUN */
-const sun = new THREE.Mesh(
-  new THREE.SphereGeometry(10, 32, 32),
-  new THREE.MeshBasicMaterial({
-    map: loader.load("https://www.solarsystemscope.com/textures/download/2k_sun.jpg")
-  })
-);
-scene.add(sun);
+  <div class="orbit" style="width:740px;height:740px;animation-duration:26s;">
+    <div class="planet uranus"></div>
+  </div>
 
-/* PLANET FUNCTION */
-function createPlanet(size, texture, distance, speed, name, info) {
-  const mesh = new THREE.Mesh(
-    new THREE.SphereGeometry(size, 32, 32),
-    new THREE.MeshStandardMaterial({
-      map: loader.load(texture)
-    })
-  );
-  scene.add(mesh);
+  <div class="orbit" style="width:860px;height:860px;animation-duration:30s;">
+    <div class="planet neptune"></div>
+  </div>
 
-  mesh.userData = { name, info };
-
-  return { mesh, distance, speed, angle: Math.random()*Math.PI*2 };
-}
-
-/* PLANETS */
-const earth = createPlanet(
-  3,
-  "https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg",
-  25, 0.01,
-  "Earth",
-  "Earth: Our home planet 🌍"
-);
-
-const mars = createPlanet(
-  2,
-  "https://www.solarsystemscope.com/textures/download/2k_mars.jpg",
-  35, 0.008,
-  "Mars",
-  "Mars: Red planet 🔴"
-);
-
-const jupiter = createPlanet(
-  6,
-  "https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg",
-  55, 0.005,
-  "Jupiter",
-  "Jupiter: Largest planet"
-);
-
-/* SATURN + RING */
-const saturn = createPlanet(
-  5,
-  "https://www.solarsystemscope.com/textures/download/2k_saturn.jpg",
-  75, 0.004,
-  "Saturn",
-  "Saturn: Beautiful rings 🪐"
-);
-
-const ringGeo = new THREE.RingGeometry(7, 10, 32);
-const ringMat = new THREE.MeshBasicMaterial({
-  map: loader.load("https://www.solarsystemscope.com/textures/download/2k_saturn_ring_alpha.png"),
-  side: THREE.DoubleSide,
-  transparent:true
-});
-const ring = new THREE.Mesh(ringGeo, ringMat);
-ring.rotation.x = Math.PI/2;
-saturn.mesh.add(ring);
-
-/* STARS */
-for(let i=0;i<2000;i++){
-  const star = new THREE.Mesh(
-    new THREE.SphereGeometry(0.2, 8, 8),
-    new THREE.MeshBasicMaterial({ color:0xffffff })
-  );
-  star.position.set(
-    (Math.random()-0.5)*2000,
-    (Math.random()-0.5)*2000,
-    (Math.random()-0.5)*2000
-  );
-  scene.add(star);
-}
-
-/* CLICK INFO */
-window.addEventListener("click", (event)=>{
-  const mouse = new THREE.Vector2(
-    (event.clientX / window.innerWidth)*2 -1,
-    -(event.clientY / window.innerHeight)*2 +1
-  );
-
-  const raycaster = new THREE.Raycaster();
-  raycaster.setFromCamera(mouse, camera);
-
-  const intersects = raycaster.intersectObjects(scene.children);
-
-  if(intersects.length>0 && intersects[0].object.userData.info){
-    document.getElementById("infoBox").style.display="block";
-    document.getElementById("infoBox").innerHTML =
-      intersects[0].object.userData.info;
-  }
-});
-
-/* SOUND */
-const audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
-audio.loop = true;
-audio.volume = 0.3;
-
-document.getElementById("btn").onclick = () => audio.play();
-
-/* ANIMATION */
-function animate(){
-  requestAnimationFrame(animate);
-
-  [earth, mars, jupiter, saturn].forEach(p=>{
-    p.angle += p.speed;
-    p.mesh.position.x = Math.cos(p.angle)*p.distance;
-    p.mesh.position.z = Math.sin(p.angle)*p.distance;
-  });
-
-  controls.update();
-  renderer.render(scene, camera);
-}
-animate();
-
-/* RESIZE */
-window.addEventListener("resize", ()=>{
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-});
-</script>
+</div>
 
 </body>
 </html>
