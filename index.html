@@ -1,124 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Solar System</title>
-    <style>
-        body { margin:0; background:black; font-family: Arial, sans-serif; overflow:hidden; }
-        #info { position:absolute; top:20px; left:50%; transform:translateX(-50%); color:white; text-align:center; z-index:10; }
-        #info h1 { font-size: 3em; margin:0; }
-        #info p { font-size: 1.2em; margin:5px 0; }
-        .planet-button {
-            display:block;
-            margin:10px auto;
-            padding:5px 10px;
-            background:#222;
-            color:white;
-            border:none;
-            cursor:pointer;
-            font-size: 0.9em;
-            border-radius:4px;
-        }
-    </style>
+  <title>Ultra Realistic Solar System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+    }
+
+    .space {
+      width: 2000px;
+      height: 2000px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: url('https://www.solarsystemscope.com/textures/download/2k_stars.jpg');
+    }
+
+    .sun {
+      width: 140px;
+      height: 140px;
+      background: url('https://www.solarsystemscope.com/textures/download/2k_sun.jpg');
+      background-size: cover;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 100px orange;
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .planet {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background-size: cover;
+    }
+
+    .mercury { width:10px;height:10px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_mercury.jpg');}
+    .venus { width:14px;height:14px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_venus_surface.jpg');}
+    .earth { width:16px;height:16px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_earth_daymap.jpg');}
+    .mars { width:12px;height:12px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_mars.jpg');}
+    .jupiter { width:30px;height:30px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_jupiter.jpg');}
+    .saturn { width:26px;height:26px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_saturn.jpg');}
+    .uranus { width:18px;height:18px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_uranus.jpg');}
+    .neptune { width:18px;height:18px;background-image:url('https://www.solarsystemscope.com/textures/download/2k_neptune.jpg');}
+
+    .ring {
+      position: absolute;
+      width: 50px;
+      height: 15px;
+      background: url('https://www.solarsystemscope.com/textures/download/2k_saturn_ring_alpha.png');
+      background-size: cover;
+      top: 5px;
+      left: -12px;
+    }
+
+  </style>
 </head>
+
 <body>
-    <div id="info">
-        <h1>Explore Our Solar System</h1>
-        <p>Discover the Wonders of the Cosmos</p>
+
+<div class="space">
+
+  <div class="sun"></div>
+
+  <div class="orbit" style="width:150px;height:150px;animation-duration:5s;">
+    <div class="planet mercury"></div>
+  </div>
+
+  <div class="orbit" style="width:220px;height:220px;animation-duration:7s;">
+    <div class="planet venus"></div>
+  </div>
+
+  <div class="orbit" style="width:300px;height:300px;animation-duration:10s;">
+    <div class="planet earth"></div>
+  </div>
+
+  <div class="orbit" style="width:380px;height:380px;animation-duration:12s;">
+    <div class="planet mars"></div>
+  </div>
+
+  <div class="orbit" style="width:500px;height:500px;animation-duration:18s;">
+    <div class="planet jupiter"></div>
+  </div>
+
+  <div class="orbit" style="width:620px;height:620px;animation-duration:22s;">
+    <div class="planet saturn">
+      <div class="ring"></div>
     </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/examples/js/controls/OrbitControls.js"></script>
+  <div class="orbit" style="width:740px;height:740px;animation-duration:26s;">
+    <div class="planet uranus"></div>
+  </div>
 
-    <script>
-        // Scene setup
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 20, 50);
+  <div class="orbit" style="width:860px;height:860px;animation-duration:30s;">
+    <div class="planet neptune"></div>
+  </div>
 
-        const renderer = new THREE.WebGLRenderer({antialias:true});
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+</div>
 
-        // Controls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-
-        // Lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-        scene.add(ambientLight);
-        const sunLight = new THREE.PointLight(0xffffff, 2, 500);
-        scene.add(sunLight);
-
-        // Sun
-        const sunGeo = new THREE.SphereGeometry(5, 64, 64);
-        const sunMat = new THREE.MeshBasicMaterial({color:0xffcc00});
-        const sun = new THREE.Mesh(sunGeo, sunMat);
-        scene.add(sun);
-
-        // Planet Data: [name, size, distance, color, sound]
-        const planetsData = [
-            ["Mercury", 0.5, 8, 0xaaaaaa, "sounds/mercury.mp3"],
-            ["Venus", 1.2, 11, 0xffddaa, "sounds/venus.mp3"],
-            ["Earth", 1.3, 14, 0x2233ff, "sounds/earth.mp3"],
-            ["Mars", 1, 17, 0xff2200, "sounds/mars.mp3"],
-            ["Jupiter", 2.5, 22, 0xffaa77, "sounds/jupiter.mp3"],
-            ["Saturn", 2.2, 28, 0xffee77, "sounds/saturn.mp3"],
-            ["Uranus", 1.5, 33, 0x77eeff, "sounds/uranus.mp3"],
-            ["Neptune", 1.5, 38, 0x2233ff, "sounds/neptune.mp3"]
-        ];
-
-        const planets = [];
-
-        planetsData.forEach(data => {
-            const [name, size, distance, color, sound] = data;
-            const geo = new THREE.SphereGeometry(size, 32, 32);
-            const mat = new THREE.MeshStandardMaterial({color: color});
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.position.x = distance;
-            scene.add(mesh);
-            planets.push({mesh, distance, angle: Math.random()*Math.PI*2, speed:0.01 + Math.random()*0.01, sound});
-        });
-
-        // Audio
-        const listener = new THREE.AudioListener();
-        camera.add(listener);
-        planets.forEach(p => {
-            const audio = new THREE.PositionalAudio(listener);
-            const loader = new THREE.AudioLoader();
-            loader.load(p.sound, function(buffer){
-                audio.setBuffer(buffer);
-                audio.setRefDistance(5);
-                audio.setLoop(true);
-                audio.play();
-            });
-            p.mesh.add(audio);
-        });
-
-        // Animation
-        function animate(){
-            requestAnimationFrame(animate);
-            controls.update();
-            sun.rotation.y += 0.001;
-
-            planets.forEach(p=>{
-                p.angle += p.speed;
-                p.mesh.position.x = p.distance * Math.cos(p.angle);
-                p.mesh.position.z = p.distance * Math.sin(p.angle);
-                p.mesh.rotation.y += 0.01;
-            });
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // Resize
-        window.addEventListener('resize', ()=>{
-            camera.aspect = window.innerWidth/window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
 </body>
 </html>
